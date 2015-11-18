@@ -32,22 +32,23 @@ sub add {
 
     my $created_bookcase = FantlabBookcases::Service::Bookcase::add_bookcase($bookcase);
 
-    $c->res->headers->location("/v1/bookcases$bookcase_id");
+    $c->res->headers->location("/v1/bookcases/" + $created_bookcase->{bookcase_id});
     $c->render(json => $created_bookcase, status => 201);
 }
 
 sub edit {
     my $c = shift;
-    my $bookcase_id = $c->stash('bookcase_id');
-    my $user_id = $c->stash('user_id') || 1;
 
-    my $bookcases = {
-        bookcase_id => $bookcase_id,
-        name => 'Just a bookcase',
-        description => 'My bookcase'
+    my $bookcase = {
+        bookcase_id => $c->stash('bookcase_id'),
+        name => $c->stash('name'),
+        description => $c->stash('description'),
+        user_id => $c->stash('user_id') || 1
     };
 
-    $c->render(json => $bookcases);
+    my $updated_bookcase = FantlabBookcases::Service::Bookcase::update_bookcase($bookcase);
+
+    $c->render(json => $updated_bookcase);
 }
 
 sub delete {

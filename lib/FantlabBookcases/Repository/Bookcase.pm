@@ -30,7 +30,13 @@ sub get_bookcase {
 }
 
 sub add_bookcase {
-    my $user = shift;
+    my $bookcase = shift;
+
+    return 1;
+}
+
+sub update_bookcase {
+    my $bookcase = shift;
 
     return 1;
 }

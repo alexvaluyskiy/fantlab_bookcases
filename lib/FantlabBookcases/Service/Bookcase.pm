@@ -28,6 +28,16 @@ sub add_bookcase {
     return $created_bookcase;
 }
 
+sub update_bookcase {
+    my $bookcase = shift;
+
+    my $bookcase_id = FantlabBookcases::Service::Bookcase::add_bookcase($bookcase);
+
+    my $created_bookcase = FantlabBookcases::Service::Bookcase::get_bookcase($bookcase->{user_id}, $bookcase->{bookcase_id});
+
+    return $created_bookcase;
+}
+
 sub delete_bookcase {
     my ($user_id, $bookcase_id) = @_;
 
