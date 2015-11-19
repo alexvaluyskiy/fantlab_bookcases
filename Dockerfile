@@ -1,7 +1,7 @@
 FROM        perl:5.22
 MAINTAINER  Alex Valuyskiy olval@ciklum.com
 
-RUN cpanm Mojocilious 
+RUN cpanm Mojolicious
 RUN cpanm common::sense
 
 RUN cachebuster=fb9409a git clone https://github.com/ravengerUA/fantlab_bookcases.git

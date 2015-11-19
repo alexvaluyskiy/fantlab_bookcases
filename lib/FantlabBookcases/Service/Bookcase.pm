@@ -17,7 +17,9 @@ sub get_bookcase {
     my $bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($user_id, $bookcase_id);
 
     # adding works
-    $bookcase->{works} = FantlabBookcases::Repository::BookcaseWork::get_bookcase_works($bookcase);
+    if ($bookcase) {
+        $bookcase->{works} = FantlabBookcases::Repository::BookcaseWork::get_bookcase_works($bookcase);
+    }
 
     return $bookcase;
 }
@@ -25,9 +27,9 @@ sub get_bookcase {
 sub add_bookcase {
     my $bookcase = shift;
 
-    my $bookcase_id = FantlabBookcases::Service::Bookcase::add_bookcase($bookcase);
+    my $bookcase_id = FantlabBookcases::Repository::Bookcase::add_bookcase($bookcase);
 
-    my $created_bookcase = FantlabBookcases::Service::Bookcase::get_bookcase($bookcase->{user_id}, $bookcase_id);
+    my $created_bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase->{user_id}, $bookcase_id);
 
     return $created_bookcase;
 }
@@ -35,9 +37,9 @@ sub add_bookcase {
 sub update_bookcase {
     my $bookcase = shift;
 
-    my $bookcase_id = FantlabBookcases::Service::Bookcase::add_bookcase($bookcase);
+    my $bookcase_id = FantlabBookcases::Repository::Bookcase::add_bookcase($bookcase);
 
-    my $created_bookcase = FantlabBookcases::Service::Bookcase::get_bookcase($bookcase->{user_id}, $bookcase->{bookcase_id});
+    my $created_bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase->{user_id}, $bookcase->{bookcase_id});
 
     return $created_bookcase;
 }
