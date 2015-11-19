@@ -2,7 +2,7 @@ package FantlabBookcases::Controller::BookcaseWork;
 use Mojo::Base 'Mojolicious::Controller';
 use FantlabBookcases::Service::BookcaseWork;
 
-sub index {workbook
+sub index {
     my $c = shift;
     my $bookcase_id = $c->stash('bookcase_id');
     my $user_id = $c->stash('user_id') || 1;
@@ -35,8 +35,8 @@ sub add {
 
     my $created_bookcase_work = FantlabBookcases::Service::BookcaseWork::add_bookcase_work($bookcase_work);
 
-    $c->res->headers->location("/v1/bookcases/" + $created_bookcase_work->{bookcase_id} + "/works");
-    $c->render(json => $created_bookcase, status => 201);
+    $c->res->headers->location("/v1/bookcases/4/works");
+    $c->render(json => $created_bookcase_work, status => 201);
 }
 
 sub edit {
@@ -65,3 +65,5 @@ sub delete {
 
     $c->render(text => "empty", status => 204);
 }
+
+1;

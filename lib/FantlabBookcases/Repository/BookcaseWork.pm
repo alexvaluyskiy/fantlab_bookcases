@@ -38,19 +38,19 @@ sub get_bookcase_work {
 sub add_bookcase_work {
     my $bookcase_work = shift;
 
-    return 1;
+    return {};
 }
 
 sub update_bookcase_work {
     my $bookcase_work = shift;
 
-    return 1;
+    return {};
 }
 
 sub delete_bookcase_work {
     my ($user_id, $bookcase_id, $bookcase_work_id) = @_;
 
-    return 1;
+    return {};
 }
 
 1;

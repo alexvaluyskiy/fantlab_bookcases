@@ -15,17 +15,27 @@ sub startup {
     $r->get('/')->to('bookcase#index');
 
     my $route = $self->routes->under('/v1');
-    $route->get('/bookcases')->to('bookcase#index');
-    $route->get('/bookcases/:bookcase_id')->to('bookcase#view');
-    $route->post('/bookcases')->to('bookcase#add');
-    $route->put('/bookcases/:bookcase_id')->to('bookcase#edit');
-    $route->delete('/bookcases/:bookcase_id')->to('bookcase#delete');
+    $route->route('/bookcases')->via('GET')->to('bookcase#index')->name('bookcase_index');
+    $route->route('/bookcases/:bookcase_id', bookcase_id => qr/\d+/)->via('GET')->to('bookcase#view')->name('bookcase_view');
+    $route->route('/bookcases')->to('bookcase#add')->via('POST')->name('bookcase_add');
+    $route->route('/bookcases/:bookcase_id', bookcase_id => qr/\d+/)->via('PUT')->to('bookcase#edit')->name('bookcase_edit');
+    $route->route('/bookcases/:bookcase_id', bookcase_id => qr/\d+/)->via('DELETE')->to('bookcase#delete')->name('bookcase_delete');
 
-    $route->get('/bookcases/:bookcase_id/works')->to('bookcasework#index');
-    $route->get('/bookcases/:bookcase_id/works/:bookcase_work_id')->to('bookcasework#view');
-    $route->post('/bookcases/:bookcase_id/works')->to('bookcasework#add');
-    $route->put('/bookcases/:bookcase_id/works/:bookcase_work_id')->to('bookcasework#edit');
-    $route->delete('/bookcases/:bookcase_id/works/:bookcase_work_id')->to('bookcasework#delete');
+    $route->route('/bookcases/:bookcase_id/works', bookcase_id => qr/\d+/)->via('GET')
+        ->to('BookcaseWork#index')
+        ->name('bookcasework_index');
+    $route->route('/bookcases/:bookcase_id/works/:bookcase_work_id', bookcase_id => qr/\d+/, bookcase_work_id => qr/\d+/)->via('GET')
+        ->to('BookcaseWork#view')
+        ->name('bookcasework_view');
+    $route->route('/bookcases/:bookcase_id/works', bookcase_id => qr/\d+/)->via('POST')
+        ->to('BookcaseWork#add')
+        ->name('bookcasework_add');
+    $route->route('/bookcases/:bookcase_id/works/:bookcase_work_id', bookcase_id => qr/\d+/, bookcase_work_id => qr/\d+/)->via('PUT')
+        ->to('BookcaseWork#edit')
+        ->name('bookcasework_edit');
+    $route->route('/bookcases/:bookcase_id/works/:bookcase_work_id', bookcase_id => qr/\d+/, bookcase_work_id => qr/\d+/)->via('DELETE')
+        ->to('BookcaseWork#delete')
+        ->name('bookcasework_delete');
 }
 
 1;
