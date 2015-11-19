@@ -20,6 +20,12 @@ sub startup {
     $route->post('/bookcases')->to('bookcase#add');
     $route->put('/bookcases/:bookcase_id')->to('bookcase#edit');
     $route->delete('/bookcases/:bookcase_id')->to('bookcase#delete');
+
+    $route->get('/bookcases/:bookcase_id/works')->to('bookcasework#index');
+    $route->get('/bookcases/:bookcase_id/works/:bookcase_work_id')->to('bookcasework#view');
+    $route->post('/bookcases/:bookcase_id/works')->to('bookcasework#add');
+    $route->put('/bookcases/:bookcase_id/works/:bookcase_work_id')->to('bookcasework#edit');
+    $route->delete('/bookcases/:bookcase_id/works/:bookcase_work_id')->to('bookcasework#delete');
 }
 
 1;

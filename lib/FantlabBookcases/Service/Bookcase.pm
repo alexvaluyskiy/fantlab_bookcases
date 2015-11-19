@@ -1,7 +1,6 @@
 package FantlabBookcases::Service::Bookcase;
 use common::sense;
 use FantlabBookcases::Repository::Bookcase;
-use FantlabBookcases::Repository::BookcaseWork;
 
 sub get_bookcases_list {
     my $user_id = shift;
@@ -15,11 +14,6 @@ sub get_bookcase {
     my ($user_id, $bookcase_id) = @_;
 
     my $bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($user_id, $bookcase_id);
-
-    # adding works
-    if ($bookcase) {
-        $bookcase->{works} = FantlabBookcases::Repository::BookcaseWork::get_bookcase_works($bookcase);
-    }
 
     return $bookcase;
 }
@@ -37,9 +31,9 @@ sub add_bookcase {
 sub update_bookcase {
     my $bookcase = shift;
 
-    my $bookcase_id = FantlabBookcases::Repository::Bookcase::add_bookcase($bookcase);
+    my $bookcase_id = FantlabBookcases::Repository::Bookcase::update_bookcase($bookcase);
 
-    my $created_bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase->{user_id}, $bookcase->{bookcase_id});
+    my $created_bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase->{user_id}, $bookcase_id);
 
     return $created_bookcase;
 }
