@@ -1,6 +1,8 @@
 package FantlabBookcases;
 use Mojo::Base 'Mojolicious';
 
+our $VERSION = '1.0.0';
+
 # This method will run once at server start
 sub startup {
     my $self = shift;
