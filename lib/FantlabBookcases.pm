@@ -3,20 +3,16 @@ use Mojo::Base 'Mojolicious';
 
 our $VERSION = '1.0.0';
 
-# This method will run once at server start
 sub startup {
-    my $self = shift;
+    my $app = shift;
 
     # Documentation browser under "/perldoc"
-    $self->plugin('PODRenderer');
-
-    # Router
-    my $r = $self->routes;
+    $app->plugin('PODRenderer');
 
     # Normal route to controller
-    $r->get('/')->to('bookcase#index');
+    $app->routes->get('/')->to('bookcase#index');
 
-    my $route = $self->routes->under('/v1');
+    my $route = $app->routes->under('/v1');
     $route->route('/bookcases')->via('GET')->to('bookcase#index')->name('bookcase_index');
     $route->route('/bookcases/:bookcase_id', bookcase_id => qr/\d+/)->via('GET')->to('bookcase#view')->name('bookcase_view');
     $route->route('/bookcases')->to('bookcase#add')->via('POST')->name('bookcase_add');
@@ -38,6 +34,14 @@ sub startup {
     $route->route('/bookcases/:bookcase_id/works/:bookcase_work_id', bookcase_id => qr/\d+/, bookcase_work_id => qr/\d+/)->via('DELETE')
         ->to('BookcaseWork#delete')
         ->name('bookcasework_delete');
+
+    # TODO: workaround for CORS, use SecureCORS instead
+    $app->hook( before_dispatch => sub {
+        my $c = shift;
+        $c->res->headers->header( 'Access-Control-Allow-Origin' => '*' );
+        $c->res->headers->header( 'Access-Control-Allow-Methods' => 'GET, PUT, POST, DELETE, OPTIONS' );
+        $c->res->headers->header( 'Access-Control-Max-Age' => 3600 );
+    });
 }
 
 1;
