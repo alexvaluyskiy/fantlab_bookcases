@@ -26,7 +26,7 @@ sub add {
     my $bookcase = $c->req->json;
     my $created_bookcase = FantlabBookcases::Service::Bookcase::add_bookcase($bookcase);
 
-    $c->res->headers->location("/v1/bookcases/" + $created_bookcase->{bookcase_id});
+    $c->res->headers->location("/v1/bookcases/" . $created_bookcase->{bookcase_id});
     $c->render(json => $created_bookcase, status => 201);
 }
 

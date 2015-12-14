@@ -16,9 +16,9 @@ sub view {
     my $c = shift;
     my $bookcase_id = $c->stash('bookcase_id');
     my $user_id = $c->stash('user_id') || 1;
-    my $bookcase_work_id = $c->stash('bookcase_work_id') || 1;
+    my $bookcase_work_id = $c->stash('bookcase_work_id');
 
-    my $bookcase_work = FantlabBookcases::Service::BookcaseWork::get_bookcase_work($user_id, $bookcase_id, $bookcase_work_id);
+    my $bookcase_work = FantlabBookcases::Service::BookcaseWork::get_bookcase_work($bookcase_id, $bookcase_work_id);
 
     $c->render(json => $bookcase_work);
 }
@@ -26,13 +26,7 @@ sub view {
 sub add {
     my $c = shift;
 
-    my $bookcase_work = {
-        bookcase_id => $c->stash('bookcase__id'),
-        name => $c->stash('name'),
-        description => $c->stash('description'),
-        user_id => $c->stash('user_id') || 1
-    };
-
+    my $bookcase_work = $c->req->json;
     my $created_bookcase_work = FantlabBookcases::Service::BookcaseWork::add_bookcase_work($bookcase_work);
 
     $c->res->headers->location("/v1/bookcases/4/works");
