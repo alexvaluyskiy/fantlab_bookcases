@@ -27,7 +27,7 @@ sub add {
     my $c = shift;
 
     my $bookcase_work = {
-        bookcase__id => $c->stash('bookcase__id'),
+        bookcase_id => $c->stash('bookcase__id'),
         name => $c->stash('name'),
         description => $c->stash('description'),
         user_id => $c->stash('user_id') || 1

@@ -4,7 +4,7 @@ use FantlabBookcases::Service::Bookcase;
 
 sub index {
     my $c = shift;
-    my $user_id = $c->stash('user_id') || 1;
+    my $user_id = $c->param('user_id') || 1;
 
     my $bookcases = FantlabBookcases::Service::Bookcase::get_bookcases_list($user_id);
 
@@ -14,9 +14,8 @@ sub index {
 sub view {
     my $c = shift;
     my $bookcase_id = $c->stash('bookcase_id');
-    my $user_id = $c->stash('user_id') || 1;
 
-    my $bookcase = FantlabBookcases::Service::Bookcase::get_bookcase($user_id, $bookcase_id);
+    my $bookcase = FantlabBookcases::Service::Bookcase::get_bookcase($bookcase_id);
 
     $c->render(json => $bookcase);
 }
@@ -24,12 +23,7 @@ sub view {
 sub add {
     my $c = shift;
 
-    my $bookcase = {
-        name => $c->stash('name'),
-        description => $c->stash('description'),
-        user_id => $c->stash('user_id') || 1
-    };
-
+    my $bookcase = $c->req->json;
     my $created_bookcase = FantlabBookcases::Service::Bookcase::add_bookcase($bookcase);
 
     $c->res->headers->location("/v1/bookcases/" + $created_bookcase->{bookcase_id});
@@ -39,12 +33,8 @@ sub add {
 sub edit {
     my $c = shift;
 
-    my $bookcase = {
-        bookcase_id => $c->stash('bookcase_id'),
-        name => $c->stash('name'),
-        description => $c->stash('description'),
-        user_id => $c->stash('user_id') || 1
-    };
+    my $bookcase = $c->req->json;
+    $bookcase->{bookcase_id} = $c->stash('bookcase_id');
 
     my $updated_bookcase = FantlabBookcases::Service::Bookcase::update_bookcase($bookcase);
 

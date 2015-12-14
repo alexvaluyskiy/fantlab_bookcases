@@ -11,9 +11,9 @@ sub get_bookcases_list {
 }
 
 sub get_bookcase {
-    my ($user_id, $bookcase_id) = @_;
+    my $bookcase_id = shift;
 
-    my $bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($user_id, $bookcase_id);
+    my $bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase_id);
 
     return $bookcase;
 }
@@ -22,26 +22,27 @@ sub add_bookcase {
     my $bookcase = shift;
 
     my $bookcase_id = FantlabBookcases::Repository::Bookcase::add_bookcase($bookcase);
+    return undef unless $bookcase_id;
 
-    my $created_bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase->{user_id}, $bookcase_id);
-
+    my $created_bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase_id);
     return $created_bookcase;
 }
 
 sub update_bookcase {
     my $bookcase = shift;
 
-    my $bookcase_id = FantlabBookcases::Repository::Bookcase::update_bookcase($bookcase);
+    my $bookcase_exists = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase->{bookcase_id});
+    return undef unless $bookcase_exists->{bookcase_id};
 
-    my $created_bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase->{user_id}, $bookcase_id);
+    FantlabBookcases::Repository::Bookcase::update_bookcase($bookcase);
 
-    return $created_bookcase;
+    return $bookcase;
 }
 
 sub delete_bookcase {
     my ($user_id, $bookcase_id) = @_;
 
-    my $bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($user_id, $bookcase_id);
+    my $bookcase = FantlabBookcases::Repository::Bookcase::get_bookcase($bookcase_id);
 
     if ($bookcase) {
         FantlabBookcases::Repository::Bookcase::delete_bookcase($user_id, $bookcase_id);

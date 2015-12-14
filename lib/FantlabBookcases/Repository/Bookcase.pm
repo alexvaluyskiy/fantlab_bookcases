@@ -8,21 +8,31 @@ my $redis = Mojo::Redis2->new;
 sub get_bookcases_list {
     my $user_id = shift;
 
-    my @keys = $redis->hkeys("bookcase=user=$user_id");
+    my $keys = $redis->hkeys("bookcase=user=$user_id");
 
     my @bookcases = ();
-    foreach my $key (@keys) {
-      my $item = {$redis->hgetall($key)};
-      push(@bookcases, $item);
+    foreach my $key (@$keys) {
+      # TODO: workaround for Mojo::Redis2->hgetall bug
+      my $fields = $redis->hkeys($key);
+      my $bookcase;
+      foreach my $field (@$fields) {
+        $bookcase->{$field} = $redis->hget($key, $field);
+      }
+      push(@bookcases, $bookcase);
     }
 
     return \@bookcases;
 }
 
 sub get_bookcase {
-    my ($user_id, $bookcase_id) = @_;
+    my $bookcase_id = shift;
 
-    my $bookcase = {$redis->hgetall("bookcase=$bookcase_id")};
+    # TODO: workaround for Mojo::Redis2->hgetall bug
+    my $fields = $redis->hkeys("bookcase=$bookcase_id");
+    my $bookcase;
+    foreach my $field (@$fields) {
+      $bookcase->{$field} = $redis->hget("bookcase=$bookcase_id", $field);
+    }
 
     return $bookcase;
 }
@@ -33,6 +43,7 @@ sub add_bookcase {
     # generate a new id
     my $new_id = $redis->incr('bookcase=identity');
     my $id_key = "bookcase=$new_id";
+    $bookcase->{bookcase_id} = $new_id;
 
     # insert a bookcase
     $redis->hmset($id_key, %$bookcase);
@@ -46,7 +57,7 @@ sub add_bookcase {
 sub update_bookcase {
     my $bookcase = shift;
 
-    $redis->hmset("bookcase=$bookcase->{id}", %$bookcase);
+    $redis->hmset("bookcase=$bookcase->{bookcase_id}", %$bookcase);
 
     return 1;
 }
@@ -62,4 +73,5 @@ sub delete_bookcase {
 
     return 1;
 }
+
 1;
